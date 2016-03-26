@@ -1,0 +1,66 @@
+//Add User To Group (Remove User from Group)
+
+public void AddToGroup_1(string user, string group)
+{
+    try
+    {
+        DirectoryEntry group_DE = new DirectoryEntry("LDAP://{Active Directory Server IP}/CN={group},DC={Domain name 1},DC={Domain name 2}");
+        group_DE.Properties["member"].Add(user);
+        group_DE.Properties["member"].Remove(user); 
+        group_DE.CommitChanges();
+        group_DE.Close();
+    }
+    catch (Exception Ex)
+    {
+        Console.WriteLine(Ex.Message);
+    }
+}
+
+public void AddToGroup_2(string user, string group)
+{
+    try
+    {
+        string filter = string.Format("(&(objectClass=group)(cn={group}))");
+        DirectorySearcher ds = new DirectorySearcher(new DirectoryEntry("LDAP://{Active Directory Server IP}/CN={group},DC={Domain name 1},DC={Domain name 2}", "{user}","{password}",AuthenticationTypes.Secure), filter);
+        SearchResult sr= ds.FindOne();
+        DirectoryEntry group_DE = sr.GetDirectoryEntry();
+        group_DE.Properties["member"].Add(user);
+        group_DE.CommitChanges();
+        group_DE.Close();
+    }
+    catch (Exception Ex)
+    {
+        Console.WriteLine(Ex.Message);
+    }
+}
+
+// Move User from the old organization unit to a new one
+public void MoveUserToNewOU(DirectoryEntry user_DE,DirectoryEntry OU_DE)
+{
+    try
+    {
+        user.MoveTo(ou);
+    }
+    catch (Exception Ex)
+    {
+        Console.WriteLine(Ex.Message);
+    }
+}
+
+// List Group Members
+public void GetGroupMember(string ip, string username, string password)
+{
+    try
+    {
+        List<string> memberList = new List<string>();
+        DirectoryEntry Group_DE = new DirectoryEntry(string.Format(@"LDAP://{0}/{1}", ip, GroupNode), {username}, {password}, AuthenticationTypes.Secure);
+        foreach (string Member in Group_DE.Properties["member"])
+        {
+            memberList.Add(Member);
+        }
+    }
+    catch (Exception Ex)
+    {
+        Console.WriteLine(Ex.Message);
+    }
+}
