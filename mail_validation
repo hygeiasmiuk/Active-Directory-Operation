@@ -1,0 +1,20 @@
+static bool ScanMailFormat(string mail)
+{
+    int AtSignIndex = mail.IndexOf('@');
+    if (AtSignIndex.Equals(-1))
+    {
+        return false;
+    }
+    else
+    {
+        if (AtSignIndex.Equals(0) || AtSignIndex.Equals(mail.Length-1))
+        {
+            return false;
+        }
+        if (!mail.IndexOf('@', AtSignIndex+1).Equals(-1))
+        {
+            return false;
+        }
+        return true;
+    }
+}
